@@ -21,6 +21,8 @@
 		F527F9F024E1FC6300C64D94 /* BreedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9EF24E1FC6300C64D94 /* BreedTableViewCell.swift */; };
 		F544075624E2C78700DC70B5 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075524E2C78700DC70B5 /* ImageViewController.swift */; };
 		F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */; };
+		F5C8451124E4A6C1001091CE /* ImageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C8451024E4A6C1001091CE /* ImageDelegate.swift */; };
+		F5C8451524E4A8A4001091CE /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C8451424E4A8A4001091CE /* SpinnerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +42,8 @@
 		F527F9EF24E1FC6300C64D94 /* BreedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedTableViewCell.swift; sourceTree = "<group>"; };
 		F544075524E2C78700DC70B5 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
+		F5C8451024E4A6C1001091CE /* ImageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDelegate.swift; sourceTree = "<group>"; };
+		F5C8451424E4A8A4001091CE /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,6 +155,8 @@
 			children = (
 				F544075524E2C78700DC70B5 /* ImageViewController.swift */,
 				F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */,
+				F5C8451024E4A6C1001091CE /* ImageDelegate.swift */,
+				F5C8451424E4A8A4001091CE /* SpinnerViewController.swift */,
 			);
 			path = "Common Image Module";
 			sourceTree = "<group>";
@@ -229,7 +235,9 @@
 				F527F9CF24E1F36C00C64D94 /* Breeds.xcdatamodeld in Sources */,
 				F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */,
 				F527F9E324E1F7A300C64D94 /* SubBreedsTableViewController.swift in Sources */,
+				F5C8451524E4A8A4001091CE /* SpinnerViewController.swift in Sources */,
 				F527F9DD24E1F74400C64D94 /* BreedsTableViewController.swift in Sources */,
+				F5C8451124E4A6C1001091CE /* ImageDelegate.swift in Sources */,
 				F527F9C524E1F36C00C64D94 /* AppDelegate.swift in Sources */,
 				F527F9C724E1F36C00C64D94 /* SceneDelegate.swift in Sources */,
 				F527F9E824E1F7D600C64D94 /* StorageService.swift in Sources */,

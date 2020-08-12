@@ -10,13 +10,19 @@ import UIKit
 
 class ImageViewController: UIViewController {
     
+    //MARK: - IBOutlets
+    
     @IBOutlet weak var imageCollectionView: UICollectionView!
     @IBOutlet weak var navItem: UINavigationItem!
+    
+    //MARK: - Properties
     
     let storageService = StorageService()
     var breed: Breed?
     var subbreed: Subbreed?
     var images = [Image]()
+    
+    //MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +37,28 @@ class ImageViewController: UIViewController {
             navItem.title = subbreed?.name?.capitalized
             guard let subbreedId = subbreed?.id, let images = storageService.loadImages(by: subbreedId) else { return }
             self.images = images
+        }
+        
+        createSpinnerView()
+    }
+    
+    //MARK: - Methods
+    
+    func createSpinnerView() {
+        let child = SpinnerViewController()
+
+        // add the spinner view controller
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
+
+        // wait two seconds to simulate some work happening
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            // then remove the spinner view controller
+            child.willMove(toParent: nil)
+            child.view.removeFromSuperview()
+            child.removeFromParent()
         }
     }
     
@@ -53,13 +81,6 @@ class ImageViewController: UIViewController {
         optionMenu.addAction(cancelAction)
         
         self.present(optionMenu, animated: true, completion: nil)
-    }
-    
-    
-    func userDidChangeFavourite(for image: Image, with favourite: Bool) {
-        guard let imageId = image.id else { return }
-        storageService.updateImage(for: imageId, with: favourite)
-        imageCollectionView.reloadData()
     }
     
 }
@@ -98,5 +119,15 @@ extension ImageViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+}
+
+//MARK: - ImageDelegate
+
+extension ImageViewController: ImageDelegate {
+    func userDidChangeFavourite(for image: Image, with favourite: Bool) {
+        guard let imageId = image.id else { return }
+        storageService.updateImage(for: imageId, with: favourite)
+        imageCollectionView.reloadData()
     }
 }

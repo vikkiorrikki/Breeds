@@ -10,12 +10,17 @@ import UIKit
 
 class SubBreedsTableViewController: UITableViewController {
     
+    //MARK: - IBOutlets
+    
     @IBOutlet weak var navItem: UINavigationItem!
     
-    weak var delegate: BreedsTableViewController?
+    //MARK: - Properties
+    
     let storageService = StorageService()
     var breed: Breed?
     var subbreeds = [Subbreed]()
+    
+    //MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,6 +33,8 @@ class SubBreedsTableViewController: UITableViewController {
             showErrorAlert()
         }
     }
+    
+    //MARK: - Methods
     
     func showErrorAlert() {
         let alert = UIAlertController(title: "Error", message: "Error of loading files", preferredStyle: .alert)

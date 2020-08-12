@@ -36,7 +36,6 @@ class BreedsTableViewController: UITableViewController {
         
         if breeds[indexPath.row].subbreed != nil {
             let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SubBreedVC") as! SubBreedsTableViewController
-            controller.delegate = self
             controller.breed = breeds[indexPath.row]
             navigationController?.pushViewController(controller, animated: true)
         } else {

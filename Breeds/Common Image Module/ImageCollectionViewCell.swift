@@ -13,7 +13,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var favouritesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
-    weak var delegate: ImageViewController?
+    weak var delegate: ImageDelegate?
     var favourite = false
     var image: Image?
     
