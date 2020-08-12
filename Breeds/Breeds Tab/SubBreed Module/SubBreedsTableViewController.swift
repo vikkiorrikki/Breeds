@@ -13,26 +13,38 @@ class SubBreedsTableViewController: UITableViewController {
     @IBOutlet weak var navItem: UINavigationItem!
     
     weak var delegate: BreedsTableViewController?
-    var breed: BreedTransferObject?
+    let storageService = StorageService()
+    var breed: Breed?
+    var subbreeds = [Subbreed]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        navItem?.title = breed!.name.capitalized
+        navItem?.title = breed?.name?.capitalized
+        
+        if let breedId = breed?.id, let subbreeds = storageService.loadSubbreeds(by: breedId) {
+            self.subbreeds = subbreeds
+        } else {
+            showErrorAlert()
+        }
+    }
+    
+    func showErrorAlert() {
+        let alert = UIAlertController(title: "Error", message: "Error of loading files", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
 
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let subbread = breed?.subBreed else { return 0 }
+        guard let subbread = breed?.subbreed else { return 0 }
         return subbread.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SubbBreedCell", for: indexPath)
-        if let subbread = breed?.subBreed {
-            cell.textLabel?.text = subbread[indexPath.row].name.capitalized
-        }
+        cell.textLabel?.text = subbreeds[indexPath.row].name?.capitalized
         return cell
     }
 
@@ -40,10 +52,7 @@ class SubBreedsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ImageVC") as! ImageViewController
-        guard let subbreed = breed?.subBreed else {
-            return
-        }
-        controller.subbreed = subbreed[indexPath.row]
+        controller.subbreed = subbreeds[indexPath.row]
         navigationController?.pushViewController(controller, animated: true)
     }
 }

@@ -9,12 +9,14 @@
 import UIKit
 
 class ImageViewController: UIViewController {
-
+    
     @IBOutlet weak var imageCollectionView: UICollectionView!
     @IBOutlet weak var navItem: UINavigationItem!
     
-    var breed: BreedTransferObject?
-    var subbreed: SubBreedTransferObject?
+    let storageService = StorageService()
+    var breed: Breed?
+    var subbreed: Subbreed?
+    var images = [Image]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,46 +24,58 @@ class ImageViewController: UIViewController {
         imageCollectionView.dataSource = self
         
         if let breed = breed {
-            navItem.title = breed.name.capitalized
+            navItem.title = breed.name?.capitalized
+            guard let breedId = breed.id, let images = storageService.loadImages(by: breedId) else { return }
+            self.images = images
         } else {
-            navItem.title = subbreed!.name.capitalized
+            navItem.title = subbreed?.name?.capitalized
+            guard let subbreedId = subbreed?.id, let images = storageService.loadImages(by: subbreedId) else { return }
+            self.images = images
         }
     }
     
-    func userDidChangeFavourite(favourite: Bool, imageName: String, tag: ViewControllerTag) {
-        switch tag {
-        case .breed:
-            breed?.images![0].favourite = favourite
-        case .subbreed:
-            subbreed?.images![0].favourite = favourite
-        }
+    @IBAction func sharedButtonTouched(_ sender: UIBarButtonItem) {
+        let optionMenu = UIAlertController(title: nil, message: "Share Photo", preferredStyle: .actionSheet)
+        
+        let shareAction = UIAlertAction(title: "Share", style: .default, handler: { [unowned self] (UIAlertAction) in
+            let sharedController = UIActivityViewController(activityItems: [self.images], applicationActivities: nil)
+            sharedController.completionWithItemsHandler = {_, bool, _, _ in
+                if bool {
+                    print("Success!")
+                }
+            }
+            self.present(sharedController, animated: true)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        optionMenu.addAction(shareAction)
+        optionMenu.addAction(cancelAction)
+        
+        self.present(optionMenu, animated: true, completion: nil)
     }
-
+    
+    
+    func userDidChangeFavourite(for image: Image, with favourite: Bool) {
+        guard let imageId = image.id else { return }
+        storageService.updateImage(for: imageId, with: favourite)
+        imageCollectionView.reloadData()
+    }
+    
 }
 
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSourc
 
 extension ImageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let breed = breed, let images = breed.images {
-            return images.count
-        } else if let subbreed = subbreed, let images = subbreed.images {
-            return images.count
-        } else {
-            return 0
-        }
-        
+        return images.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ImageCollectionViewCell
         cell.delegate = self
         
-        if let breed = breed, let images = breed.images {
-            cell.updateCell(favourite: images[indexPath.item].favourite, imageName: images[indexPath.item].name, tag: .breed)
-        } else if let subbreed = subbreed, let images = subbreed.images {
-            cell.updateCell(favourite: images[indexPath.item].favourite, imageName: images[indexPath.item].name, tag: .subbreed)
-        }
+        cell.updateCell(image: images[indexPath.item])
         
         return cell
     }

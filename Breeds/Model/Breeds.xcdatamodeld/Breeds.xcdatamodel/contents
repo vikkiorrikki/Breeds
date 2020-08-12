@@ -7,13 +7,14 @@
         <relationship name="subbreed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subbreed" inverseName="breed" inverseEntity="Subbreed"/>
     </entity>
     <entity name="Image" representedClassName=".Image" syncable="YES" codeGenerationType="class">
+        <attribute name="dogId" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="favourite" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
         <relationship name="breed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Breed" inverseName="images" inverseEntity="Breed"/>
         <relationship name="subbreed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subbreed" inverseName="images" inverseEntity="Subbreed"/>
     </entity>
-    <entity name="Subbreed" representedClassName=".SubBreed" syncable="YES" codeGenerationType="class">
+    <entity name="Subbreed" representedClassName=".Subbreed" syncable="YES" codeGenerationType="class">
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="breed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Breed" inverseName="subbreed" inverseEntity="Breed"/>
@@ -21,7 +22,7 @@
     </entity>
     <elements>
         <element name="Breed" positionX="-253.5234375" positionY="-164.84375" width="128" height="103"/>
-        <element name="Subbreed" positionX="-54" positionY="-9" width="128" height="103"/>
-        <element name="Image" positionX="-317.40234375" positionY="-21.1953125" width="128" height="118"/>
+        <element name="Image" positionX="-317.40234375" positionY="-21.1953125" width="128" height="133"/>
+        <element name="Subbreed" positionX="-538.21484375" positionY="-131.921875" width="128" height="103"/>
     </elements>
 </model>

@@ -15,24 +15,20 @@ class ImageCollectionViewCell: UICollectionViewCell {
     
     weak var delegate: ImageViewController?
     var favourite = false
-    var imageName = ""
-    var vcTag: ViewControllerTag?
+    var image: Image?
     
-    func updateCell(favourite: Bool, imageName: String, tag: ViewControllerTag) {
+    func updateCell(image: Image) {
+        
+        self.image = image
+        
+        guard let imageName = image.name else { return }
         imageView.image = UIImage(named: imageName)
-        self.favourite = favourite
-        self.imageName = imageName
+        self.favourite = image.favourite
+        
         if !favourite {
             favouritesButton.setImage(UIImage(systemName: "heart"), for: .normal)
         } else {
             favouritesButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
-        }
-        
-        switch tag {
-        case .breed:
-            vcTag = tag
-        case .subbreed:
-            vcTag = tag
         }
     }
     
@@ -44,7 +40,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
             favouritesButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
             favourite = true
         }
-        delegate?.userDidChangeFavourite(favourite: favourite, imageName: imageName, tag: vcTag!)
+        
+        guard let image = image else { return }
+        delegate?.userDidChangeFavourite(for: image, with: favourite)
     }
     
 }

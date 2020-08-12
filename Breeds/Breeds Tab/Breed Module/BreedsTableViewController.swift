@@ -10,17 +10,7 @@ import UIKit
 
 class BreedsTableViewController: UITableViewController {
 
-    let breeds = [
-        BreedTransferObject(name: "basenji", subBreed: nil, images: [Image(name: "n02088094_482.jpg", favourite: true)]),
-        BreedTransferObject(name: "australian",
-                            subBreed: [SubBreedTransferObject(name: "shepherd",
-                                                              images: [
-                                Image(name: "n02088094_3630.jpg", favourite: true),
-                                Image(name: "n02088094_482.jpg", favourite: false)])],
-                            images: nil),
-        BreedTransferObject(name: "airedale", subBreed: nil,
-                            images: [Image(name: "n02088094_11432.jpg", favourite: false)])
-    ]
+    let breeds = [Breed]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,7 +34,7 @@ class BreedsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if breeds[indexPath.row].subBreed != nil {
+        if breeds[indexPath.row].subbreed != nil {
             let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SubBreedVC") as! SubBreedsTableViewController
             controller.delegate = self
             controller.breed = breeds[indexPath.row]

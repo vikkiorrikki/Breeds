@@ -187,7 +187,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vGz-Nm-VHY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="zTq-yn-taG"/>
+                    <navigationItem key="navigationItem" title="Title" id="zTq-yn-taG">
+                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="VT7-Qg-9Nh">
+                            <connections>
+                                <action selector="sharedButtonTouched:" destination="YIg-mU-kOv" id="fk0-gL-Dgb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="imageCollectionView" destination="tZ9-fo-0jd" id="kl1-EG-pvD"/>
                         <outlet property="navItem" destination="zTq-yn-taG" id="VCL-nu-N3h"/>

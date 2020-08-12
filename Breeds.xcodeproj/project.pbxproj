@@ -18,13 +18,9 @@
 		F527F9E324E1F7A300C64D94 /* SubBreedsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9E224E1F7A300C64D94 /* SubBreedsTableViewController.swift */; };
 		F527F9E524E1F7C200C64D94 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9E424E1F7C200C64D94 /* NetworkService.swift */; };
 		F527F9E824E1F7D600C64D94 /* StorageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9E724E1F7D600C64D94 /* StorageService.swift */; };
-		F527F9EA24E1F9B100C64D94 /* BreedTransferObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9E924E1F9B100C64D94 /* BreedTransferObject.swift */; };
-		F527F9EC24E1FA1300C64D94 /* SubBreedTransferObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9EB24E1FA1300C64D94 /* SubBreedTransferObject.swift */; };
 		F527F9F024E1FC6300C64D94 /* BreedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9EF24E1FC6300C64D94 /* BreedTableViewCell.swift */; };
 		F544075624E2C78700DC70B5 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075524E2C78700DC70B5 /* ImageViewController.swift */; };
 		F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */; };
-		F578F60524E46F2900C53ADD /* ViewControllerTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578F60424E46F2900C53ADD /* ViewControllerTag.swift */; };
-		F578F60724E4730400C53ADD /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = F578F60624E4730400C53ADD /* Image.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,13 +37,9 @@
 		F527F9E224E1F7A300C64D94 /* SubBreedsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubBreedsTableViewController.swift; sourceTree = "<group>"; };
 		F527F9E424E1F7C200C64D94 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		F527F9E724E1F7D600C64D94 /* StorageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageService.swift; sourceTree = "<group>"; };
-		F527F9E924E1F9B100C64D94 /* BreedTransferObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedTransferObject.swift; sourceTree = "<group>"; };
-		F527F9EB24E1FA1300C64D94 /* SubBreedTransferObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubBreedTransferObject.swift; sourceTree = "<group>"; };
 		F527F9EF24E1FC6300C64D94 /* BreedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedTableViewCell.swift; sourceTree = "<group>"; };
 		F544075524E2C78700DC70B5 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
-		F578F60424E46F2900C53ADD /* ViewControllerTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewControllerTag.swift; sourceTree = "<group>"; };
-		F578F60624E4730400C53ADD /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,9 +91,6 @@
 			isa = PBXGroup;
 			children = (
 				F527F9CD24E1F36C00C64D94 /* Breeds.xcdatamodeld */,
-				F527F9E924E1F9B100C64D94 /* BreedTransferObject.swift */,
-				F527F9EB24E1FA1300C64D94 /* SubBreedTransferObject.swift */,
-				F578F60624E4730400C53ADD /* Image.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -162,7 +151,6 @@
 			children = (
 				F544075524E2C78700DC70B5 /* ImageViewController.swift */,
 				F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */,
-				F578F60424E46F2900C53ADD /* ViewControllerTag.swift */,
 			);
 			path = "Common Image Module";
 			sourceTree = "<group>";
@@ -238,19 +226,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F527F9EA24E1F9B100C64D94 /* BreedTransferObject.swift in Sources */,
 				F527F9CF24E1F36C00C64D94 /* Breeds.xcdatamodeld in Sources */,
 				F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */,
 				F527F9E324E1F7A300C64D94 /* SubBreedsTableViewController.swift in Sources */,
-				F578F60724E4730400C53ADD /* Image.swift in Sources */,
 				F527F9DD24E1F74400C64D94 /* BreedsTableViewController.swift in Sources */,
-				F527F9EC24E1FA1300C64D94 /* SubBreedTransferObject.swift in Sources */,
 				F527F9C524E1F36C00C64D94 /* AppDelegate.swift in Sources */,
 				F527F9C724E1F36C00C64D94 /* SceneDelegate.swift in Sources */,
 				F527F9E824E1F7D600C64D94 /* StorageService.swift in Sources */,
 				F527F9E024E1F75F00C64D94 /* FavouritesTableViewController.swift in Sources */,
 				F527F9E524E1F7C200C64D94 /* NetworkService.swift in Sources */,
-				F578F60524E46F2900C53ADD /* ViewControllerTag.swift in Sources */,
 				F544075624E2C78700DC70B5 /* ImageViewController.swift in Sources */,
 				F527F9F024E1FC6300C64D94 /* BreedTableViewCell.swift in Sources */,
 			);
