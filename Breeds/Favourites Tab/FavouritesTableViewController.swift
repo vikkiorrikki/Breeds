@@ -10,25 +10,18 @@ import UIKit
 
 class FavouritesTableViewController: UITableViewController {
 
+    var images: Image?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        //storageService.loadImagesThatFavourites
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
+        //return 
         return 0
     }
 
@@ -36,7 +29,19 @@ class FavouritesTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
 
-        // Configure the cell...
+        if let breads = breeds {
+            cell.textLabel?.text = breads[indexPath.row].name.capitalized + "(\(breads.count) favourites)"
+        }
+        if let subbreads = subbreeds {
+            cell.textLabel?.text = subbreads[indexPath.row].name.capitalized
+        }
+     
+     if let subbreedCount = model.subBreed?.count {
+         count.text = "(\(subbreedCount) subbreeds)"
+     } else {
+         count.isHidden = true
+     }
+
 
         return cell
     }

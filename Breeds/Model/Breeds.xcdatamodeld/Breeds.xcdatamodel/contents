@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19C57" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Breed" representedClassName=".Breed" syncable="YES" codeGenerationType="class">
-        <attribute name="favourite" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="image" optional="YES" attributeType="String"/>
-        <attribute name="name" attributeType="String"/>
-        <relationship name="subbreed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SubBreed" inverseName="breed" inverseEntity="SubBreed"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="breed" inverseEntity="Image"/>
+        <relationship name="subbreed" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Subbreed" inverseName="breed" inverseEntity="Subbreed"/>
     </entity>
-    <entity name="SubBreed" representedClassName=".SubBreed" syncable="YES" codeGenerationType="class">
+    <entity name="Image" representedClassName=".Image" syncable="YES" codeGenerationType="class">
         <attribute name="favourite" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="image" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" attributeType="String"/>
+        <relationship name="breed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Breed" inverseName="images" inverseEntity="Breed"/>
+        <relationship name="subbreed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subbreed" inverseName="images" inverseEntity="Subbreed"/>
+    </entity>
+    <entity name="Subbreed" representedClassName=".SubBreed" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="breed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Breed" inverseName="subbreed" inverseEntity="Breed"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="subbreed" inverseEntity="Image"/>
     </entity>
     <elements>
         <element name="Breed" positionX="-253.5234375" positionY="-164.84375" width="128" height="103"/>
-        <element name="SubBreed" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="Subbreed" positionX="-54" positionY="-9" width="128" height="103"/>
+        <element name="Image" positionX="-317.40234375" positionY="-21.1953125" width="128" height="118"/>
     </elements>
 </model>
