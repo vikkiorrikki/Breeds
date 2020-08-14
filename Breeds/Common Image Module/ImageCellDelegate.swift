@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ImageDelegate: class {
+protocol ImageCellDelegate: class {
     func userDidChangeFavourite(for image: Image, with favourite: Bool)
 }

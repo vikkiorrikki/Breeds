@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BreedsTableViewController: UITableViewController {
+class BreedsTableViewController: UITableViewController, BreedNetworkDelegate {
 
     var breeds = [Breed]()
     let storageService = StorageService()

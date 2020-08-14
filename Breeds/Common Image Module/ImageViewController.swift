@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageViewController: UIViewController {
+class ImageViewController: UIViewController, ImageNetworkDelegate {
     
     //MARK: - IBOutlets
     
@@ -70,6 +70,8 @@ class ImageViewController: UIViewController {
         }
     }
     
+    //MARK: - Delegate Methods
+    
     func updateCollectionView(breedName: String) {
         guard let images = storageService.loadImages(breedName: breedName) else { return }
         self.images = images
@@ -84,6 +86,8 @@ class ImageViewController: UIViewController {
         hideSpinnerView(spinner)
     }
     
+    //MARK: - Spinner Methods
+    
     func showSpinnerView(_ spinner: SpinnerViewController) {
         addChild(spinner)
         spinner.view.frame = view.frame
@@ -96,6 +100,8 @@ class ImageViewController: UIViewController {
         spinner.view.removeFromSuperview()
         spinner.removeFromParent()
     }
+    
+    //MARK: - IBActions
     
     @IBAction func sharedButtonTouched(_ sender: UIBarButtonItem) {
         let optionMenu = UIAlertController(title: nil, message: "Share Photo", preferredStyle: .actionSheet)
@@ -160,7 +166,7 @@ extension ImageViewController: UICollectionViewDelegateFlowLayout {
 
 //MARK: - ImageDelegate
 
-extension ImageViewController: ImageDelegate {
+extension ImageViewController: ImageCellDelegate {
     func userDidChangeFavourite(for image: Image, with favourite: Bool) {
         guard let imageId = image.id else { return }
         storageService.updateImage(for: imageId, with: favourite)

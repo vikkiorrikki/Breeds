@@ -10,8 +10,8 @@ import Foundation
 
 class NetworkService {
     
-    weak var delegateBreeds: BreedsTableViewController?
-    weak var delegateImages: ImageViewController?
+    weak var delegateBreeds: BreedNetworkDelegate?
+    weak var delegateImages: ImageNetworkDelegate?
     
     let storageService = StorageService()
     let requestURL = "https://dog.ceo/api"
