@@ -188,7 +188,7 @@
                         <viewLayoutGuide key="safeArea" id="vGz-Nm-VHY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="zTq-yn-taG">
-                        <barButtonItem key="leftBarButtonItem" systemItem="action" id="VT7-Qg-9Nh">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="VT7-Qg-9Nh">
                             <connections>
                                 <action selector="sharedButtonTouched:" destination="YIg-mU-kOv" id="fk0-gL-Dgb"/>
                             </connections>

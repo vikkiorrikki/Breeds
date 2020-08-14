@@ -27,11 +27,15 @@ class StorageService {
         }
     }
     
-    func addSubbreed(name: String) -> Bool {
+    func addSubbreed(with name: String, by breedName: String) -> Bool {
         let subbreed = Subbreed(context: context)
         
         subbreed.id = UUID()
         subbreed.name = name
+        
+        let breed = loadBreed(by: breedName)
+        subbreed.breedId = breed?.id
+        subbreed.breed = breed
 
         do {
             try context.save()
@@ -42,11 +46,30 @@ class StorageService {
         }
     }
     
-    func addImage(for dogId: UUID, with name: String) -> Bool {
+    func addImage(breedName: String, with imageName: String) -> Bool {
+        let dogId = loadBreed(by: breedName)?.id
         let image = Image(context: context)
         
         image.id = UUID()
-        image.name = name
+        image.name = imageName
+        image.dogId = dogId
+        image.favourite = false
+
+        do {
+            try context.save()
+            return true
+        } catch let error as NSError {
+            print("Could not save. \(error), \(error.userInfo)")
+            return false
+        }
+    }
+    
+    func addImage(subbreedName: String, with imageName: String) -> Bool {
+        let dogId = loadSubbreed(by: subbreedName)?.id
+        let image = Image(context: context)
+        
+        image.id = UUID()
+        image.name = imageName
         image.dogId = dogId
         image.favourite = false
 
@@ -70,9 +93,24 @@ class StorageService {
         }
     }
     
-    func loadSubbreeds(by breedId: UUID) -> [Subbreed]? {
+    func loadBreed(by name: String) -> Breed? {
+        let fetchRequest: NSFetchRequest<Breed> = Breed.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "name == %@", name)
+        
+        do {
+            guard let breed = try context.fetch(fetchRequest).first
+                else { return nil }
+            return breed
+        } catch let error as NSError {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func loadSubbreeds(by breedName: String) -> [Subbreed]? {
+        let breedId = loadBreed(by: breedName)?.id
         let fetchRequest: NSFetchRequest<Subbreed> = Subbreed.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "id == %@", breedId as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "breedId == %@", breedId! as CVarArg)
         
         do {
             return try context.fetch(fetchRequest)
@@ -82,9 +120,37 @@ class StorageService {
         }
     }
     
-    func loadImages(by dogId: UUID) -> [Image]? {
+    func loadSubbreed(by subbreedName: String) -> Subbreed? {
+        let fetchRequest: NSFetchRequest<Subbreed> = Subbreed.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "name == %@", subbreedName)
+        
+        do {
+            guard let subbreed = try context.fetch(fetchRequest).first
+                else { return nil }
+            return subbreed
+        } catch let error as NSError {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func loadImages(breedName: String) -> [Image]? {
+        let dogId = loadBreed(by: breedName)?.id
         let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "dogId == %@", dogId as CVarArg)
+        fetchRequest.predicate = NSPredicate(format: "dogId == %@", dogId! as CVarArg)
+        
+        do {
+            return try context.fetch(fetchRequest)
+        } catch let error as NSError {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func loadImages(subbreedName: String) -> [Image]? {
+        let dogId = loadSubbreed(by: subbreedName)?.id
+        let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "dogId == %@", dogId! as CVarArg)
         
         do {
             return try context.fetch(fetchRequest)

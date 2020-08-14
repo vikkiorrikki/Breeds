@@ -10,11 +10,42 @@ import UIKit
 
 class BreedsTableViewController: UITableViewController {
 
-    let breeds = [Breed]()
+    var breeds = [Breed]()
+    let storageService = StorageService()
+    let networkService = NetworkService()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
+        networkService.delegateBreeds = self
+        
+        guard let breeds = storageService.loadBreeds() else { return }
+        
+        if breeds.isEmpty {
+            networkService.fetchBreeds()
+        } else {
+            update()
+        }
+
         tableView.tableFooterView = UIView()
+    }
+    
+    //MARK: - Methods
+    
+    func update() {
+        guard let breeds = storageService.loadBreeds() else { return }
+        self.breeds = breeds
+        reloadTable()
+    }
+    
+    func reloadTable() {
+        self.tableView.reloadData()
+    }
+    
+    func showErrorAlert(with message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
 
     // MARK: - Table view data source
@@ -34,7 +65,7 @@ class BreedsTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if breeds[indexPath.row].subbreed != nil {
+        if breeds[indexPath.row].subbreed?.count != 0 {
             let controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "SubBreedVC") as! SubBreedsTableViewController
             controller.breed = breeds[indexPath.row]
             navigationController?.pushViewController(controller, animated: true)

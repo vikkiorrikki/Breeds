@@ -15,6 +15,7 @@
         <relationship name="subbreed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Subbreed" inverseName="images" inverseEntity="Subbreed"/>
     </entity>
     <entity name="Subbreed" representedClassName=".Subbreed" syncable="YES" codeGenerationType="class">
+        <attribute name="breedId" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
         <relationship name="breed" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Breed" inverseName="subbreed" inverseEntity="Breed"/>
@@ -23,6 +24,6 @@
     <elements>
         <element name="Breed" positionX="-253.5234375" positionY="-164.84375" width="128" height="103"/>
         <element name="Image" positionX="-317.40234375" positionY="-21.1953125" width="128" height="133"/>
-        <element name="Subbreed" positionX="-538.21484375" positionY="-131.921875" width="128" height="103"/>
+        <element name="Subbreed" positionX="-538.21484375" positionY="-131.921875" width="128" height="118"/>
     </elements>
 </model>

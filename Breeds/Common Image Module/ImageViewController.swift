@@ -18,9 +18,12 @@ class ImageViewController: UIViewController {
     //MARK: - Properties
     
     let storageService = StorageService()
+    let networkService = NetworkService()
+    
     var breed: Breed?
     var subbreed: Subbreed?
     var images = [Image]()
+    let spinner = SpinnerViewController()
     
     //MARK: - LifeCycle
     
@@ -28,38 +31,69 @@ class ImageViewController: UIViewController {
         super.viewDidLoad()
         imageCollectionView.delegate = self
         imageCollectionView.dataSource = self
+        networkService.delegateImages = self
         
-        if let breed = breed {
-            navItem.title = breed.name?.capitalized
-            guard let breedId = breed.id, let images = storageService.loadImages(by: breedId) else { return }
-            self.images = images
-        } else {
-            navItem.title = subbreed?.name?.capitalized
-            guard let subbreedId = subbreed?.id, let images = storageService.loadImages(by: subbreedId) else { return }
-            self.images = images
-        }
-        
-        createSpinnerView()
+        setupCollectionView()
     }
     
     //MARK: - Methods
     
-    func createSpinnerView() {
-        let child = SpinnerViewController()
-
-        // add the spinner view controller
-        addChild(child)
-        child.view.frame = view.frame
-        view.addSubview(child.view)
-        child.didMove(toParent: self)
-
-        // wait two seconds to simulate some work happening
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            // then remove the spinner view controller
-            child.willMove(toParent: nil)
-            child.view.removeFromSuperview()
-            child.removeFromParent()
+    func setupCollectionView() {
+        if let breed = breed {
+            navItem.title = breed.name?.capitalized
+            guard let breedName = breed.name, let images = storageService.loadImages(breedName: breedName) else { return }
+            self.images = images
+            
+            if images.isEmpty {
+                showSpinnerView(spinner)
+                networkService.fetchImages(by: breedName)
+                guard let images = storageService.loadImages(breedName: breedName) else { return }
+                self.images = images
+            } else {
+                updateCollectionView(breedName: breedName)
+            }
+        } else {
+            navItem.title = subbreed?.name?.capitalized
+            guard let subbreedName = subbreed?.name, let breedName = subbreed?.breed?.name, let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+            self.images = images
+            
+            if images.isEmpty {
+                networkService.fetchImages(by: breedName, by: subbreedName)
+                guard let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+                self.images = images
+                
+            } else {
+                updateCollectionView(subbreedName: subbreedName)
+                
+            }
         }
+    }
+    
+    func updateCollectionView(breedName: String) {
+        guard let images = storageService.loadImages(breedName: breedName) else { return }
+        self.images = images
+        imageCollectionView.reloadData()
+        hideSpinnerView(spinner)
+    }
+    
+    func updateCollectionView(subbreedName: String) {
+        guard let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+        self.images = images
+        imageCollectionView.reloadData()
+        hideSpinnerView(spinner)
+    }
+    
+    func showSpinnerView(_ spinner: SpinnerViewController) {
+        addChild(spinner)
+        spinner.view.frame = view.frame
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+    }
+    
+    func hideSpinnerView(_ spinner: SpinnerViewController) {
+        spinner.willMove(toParent: nil)
+        spinner.view.removeFromSuperview()
+        spinner.removeFromParent()
     }
     
     @IBAction func sharedButtonTouched(_ sender: UIBarButtonItem) {
@@ -89,6 +123,7 @@ class ImageViewController: UIViewController {
 
 extension ImageViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        print(images.count)
         return images.count
     }
     

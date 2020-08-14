@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
@@ -22,9 +23,9 @@ class ImageCollectionViewCell: UICollectionViewCell {
         self.image = image
         
         guard let imageName = image.name else { return }
-        imageView.image = UIImage(named: imageName)
-        self.favourite = image.favourite
+        imageView.sd_setImage(with: URL(string: imageName))
         
+        self.favourite = image.favourite
         if !favourite {
             favouritesButton.setImage(UIImage(systemName: "heart"), for: .normal)
         } else {

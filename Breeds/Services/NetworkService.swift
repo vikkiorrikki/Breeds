@@ -10,51 +10,174 @@ import Foundation
 
 class NetworkService {
     
-//     let requestURL = "https://dog.ceo/api/"
-//        var delegate: WeatherManagerDelegate?
-//        
-//        func fetchCity(city: String) {
-//            let urlString = "\(weatherURL)&q=\(city)"
-//            performRequest(with: urlString)
-//        }
-//        func fetchWeather(latitude: Double, longtitude: Double){
-//            let urlString = "\(weatherURL)&lon=\(longtitude)&lat=\(latitude)"
-//            performRequest(with: urlString)
-//        }
-//        
-//        func performRequest(with urlString: String) {
-//    //        1. Create URL string
-//            if let url = URL(string: urlString){
-//                //        2. Create URL session
-//                let session = URLSession(configuration: .default)
-//                //        3. Give URL session a task
-//                let task = session.dataTask(with: url) { (data, response, error) in
-//                    if error != nil {
-//                        self.delegate?.didFailWithError(error: error!)
-//                    }
-//                    if let safeData = data{
-//                        if let weather = self.parseJSON(safeData){
-//                            self.delegate?.didUpdateWeather(self, weather: weather)
-//                        }
-//                    }
-//                }
-//                //        4. Start a task
-//                task.resume()
-//            }
-//        }
-//        func parseJSON(_ weatherData: Data) -> WeatherModel? {
-//            let decoder = JSONDecoder()
-//            do{
-//                let decodedData = try decoder.decode(WeatherData.self, from: weatherData)
-//                let temp = decodedData.main.temp
-//                let name = decodedData.name
-//                let conditionID = decodedData.weather[0].id
-//                
-//                let weatherModel = WeatherModel(cityName: name, conditionID: conditionID, temp: temp)
-//                return weatherModel
-//            }catch{
-//                delegate?.didFailWithError(error: error)
-//                return nil
-//            }
-//        }
+    weak var delegateBreeds: BreedsTableViewController?
+    weak var delegateImages: ImageViewController?
+    
+    let storageService = StorageService()
+    let requestURL = "https://dog.ceo/api"
+    
+    //MARK: - Fetch Breeds
+    
+    func fetchBreeds() {
+        let urlString = "\(requestURL)/breeds/list"
+        
+        if let url = URL(string: urlString){
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    self.delegateBreeds?.showErrorAlert(with: "\(String(describing: error))")
+                }
+                if let safeData = data {
+                    self.parseJSON(breedData: safeData)
+                    
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func parseJSON(breedData: Data) -> String {
+        let decoder = JSONDecoder()
+        
+        do {
+            let decodedData = try decoder.decode(BreedData.self, from: breedData)
+            let breedNames = decodedData.message
+            let status = decodedData.status
+            
+            for name in breedNames {
+                storageService.addBreed(name: name)
+                fetchSubbreeds(by: name)
+            }
+            
+            return status
+        } catch {
+            delegateBreeds?.showErrorAlert(with: "\(error)")
+            return "\(error)"
+        }
+    }
+    
+    //MARK: - Fetch Subbreeds
+    
+    func fetchSubbreeds(by breed: String) {
+        let urlString = "\(requestURL)/breed/\(breed)/list"
+        
+        if let url = URL(string: urlString){
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    //                    self.delegate?.didFailWithError(error: error!)
+                }
+                if let safeData = data {
+                    DispatchQueue.main.async {
+                    if self.parseJSON(subbreedData: safeData, by: breed) == "success" {
+                            self.delegateBreeds?.update()
+                        }
+                        
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func parseJSON(subbreedData: Data, by breedName: String) -> String {
+        let decoder = JSONDecoder()
+        
+        do {
+            let decodedData = try decoder.decode(SubbreedData.self, from: subbreedData)
+            let subbreedNames = decodedData.message
+            let status = decodedData.status
+            
+            for name in subbreedNames {
+                storageService.addSubbreed(with: name, by: breedName)
+            }
+            
+            return status
+        } catch {
+            return "\(error)"
+        }
+    }
+    
+    //MARK: - Fetch Images for Breed
+    
+    func fetchImages(by breed: String) {
+        let urlString = "\(requestURL)/breed/\(breed)/images"
+        
+        if let url = URL(string: urlString){
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    //                    self.delegate?.didFailWithError(error: error!)
+                }
+                if let safeData = data {
+                    
+                        if self.parseJSON(imageData: safeData, breedName: breed) == "success" {
+                            DispatchQueue.main.async {
+                            self.delegateImages?.updateCollectionView(breedName: breed)
+                        }
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func parseJSON(imageData: Data, breedName: String) -> String {
+        let decoder = JSONDecoder()
+        
+        do {
+            let decodedData = try decoder.decode(ImageData.self, from: imageData)
+            let imageNames = decodedData.message
+            let status = decodedData.status
+            
+            for name in imageNames {
+                storageService.addImage(breedName: breedName, with: name)
+            }
+            
+            return status
+        } catch {
+            return "\(error)"
+        }
+    }
+    
+    //MARK: - Fetch Images for Subbreed
+    
+    func fetchImages(by breed: String, by subbreed: String) {
+        let urlString = "\(requestURL)/breed/\(breed)/\(subbreed)/images"
+        
+        if let url = URL(string: urlString){
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if error != nil {
+                    //                    self.delegate?.didFailWithError(error: error!)
+                }
+                if let safeData = data {
+                    DispatchQueue.main.async {
+                        if self.parseJSON(imageData: safeData, subbreedName: subbreed) == "success" {
+                            self.delegateImages?.updateCollectionView(subbreedName: subbreed)
+                        }
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+    
+    func parseJSON(imageData: Data, subbreedName: String) -> String {
+        let decoder = JSONDecoder()
+        
+        do {
+            let decodedData = try decoder.decode(ImageData.self, from: imageData)
+            let imageNames = decodedData.message
+            let status = decodedData.status
+            
+            for name in imageNames {
+                storageService.addImage(subbreedName: subbreedName, with: name)
+            }
+            
+            return status
+        } catch {
+            return "\(error)"
+        }
+    }
 }

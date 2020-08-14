@@ -26,12 +26,9 @@ class SubBreedsTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
         navItem?.title = breed?.name?.capitalized
-        
-        if let breedId = breed?.id, let subbreeds = storageService.loadSubbreeds(by: breedId) {
-            self.subbreeds = subbreeds
-        } else {
-            showErrorAlert()
-        }
+        guard let breedName = breed?.name, let subbreeds = storageService.loadSubbreeds(by: breedName) else { return }
+        self.subbreeds = subbreeds
+
     }
     
     //MARK: - Methods
@@ -45,8 +42,7 @@ class SubBreedsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let subbread = breed?.subbreed else { return 0 }
-        return subbread.count
+        return subbreeds.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

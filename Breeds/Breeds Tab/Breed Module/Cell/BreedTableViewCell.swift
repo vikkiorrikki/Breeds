@@ -15,11 +15,13 @@ class BreedTableViewCell: UITableViewCell {
 
     func setupCell(with model: Breed) {
         name.text = model.name?.capitalized
+        let subbreedCount = model.subbreed?.count
         
-        if let subbreedCount = model.subbreed?.count {
-            count.text = "(\(subbreedCount) subbreeds)"
-        } else {
+        if subbreedCount == 0 {
             count.isHidden = true
+        } else {
+            count.isHidden = false
+            count.text = "(\(String(describing: subbreedCount!)) subbreeds)"
         }
     }
 }
