@@ -58,6 +58,7 @@ class ImageViewController: UIViewController {
             self.images = images
             
             if images.isEmpty {
+                showSpinnerView(spinner)
                 networkService.fetchImages(by: breedName, by: subbreedName)
                 guard let images = storageService.loadImages(subbreedName: subbreedName) else { return }
                 self.images = images

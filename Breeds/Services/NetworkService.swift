@@ -29,7 +29,6 @@ class NetworkService {
                 }
                 if let safeData = data {
                     self.parseJSON(breedData: safeData)
-                    
                 }
             }
             task.resume()
@@ -45,7 +44,9 @@ class NetworkService {
             let status = decodedData.status
             
             for name in breedNames {
-                storageService.addBreed(name: name)
+                DispatchQueue.main.async {
+                    self.storageService.addBreed(name: name)
+                }
                 fetchSubbreeds(by: name)
             }
             
@@ -68,8 +69,9 @@ class NetworkService {
                     //                    self.delegate?.didFailWithError(error: error!)
                 }
                 if let safeData = data {
-                    DispatchQueue.main.async {
+                    
                     if self.parseJSON(subbreedData: safeData, by: breed) == "success" {
+                        DispatchQueue.main.async {
                             self.delegateBreeds?.update()
                         }
                         
@@ -89,7 +91,9 @@ class NetworkService {
             let status = decodedData.status
             
             for name in subbreedNames {
-                storageService.addSubbreed(with: name, by: breedName)
+                DispatchQueue.main.async {
+                    self.storageService.addSubbreed(with: name, by: breedName)
+                }
             }
             
             return status
@@ -111,8 +115,8 @@ class NetworkService {
                 }
                 if let safeData = data {
                     
-                        if self.parseJSON(imageData: safeData, breedName: breed) == "success" {
-                            DispatchQueue.main.async {
+                    if self.parseJSON(imageData: safeData, breedName: breed) == "success" {
+                        DispatchQueue.main.async {
                             self.delegateImages?.updateCollectionView(breedName: breed)
                         }
                     }
@@ -131,7 +135,9 @@ class NetworkService {
             let status = decodedData.status
             
             for name in imageNames {
-                storageService.addImage(breedName: breedName, with: name)
+                DispatchQueue.main.async {
+                    self.storageService.addImage(breedName: breedName, with: name)
+                }
             }
             
             return status
@@ -152,8 +158,9 @@ class NetworkService {
                     //                    self.delegate?.didFailWithError(error: error!)
                 }
                 if let safeData = data {
-                    DispatchQueue.main.async {
-                        if self.parseJSON(imageData: safeData, subbreedName: subbreed) == "success" {
+                    
+                    if self.parseJSON(imageData: safeData, subbreedName: subbreed) == "success" {
+                        DispatchQueue.main.async {
                             self.delegateImages?.updateCollectionView(subbreedName: subbreed)
                         }
                     }
@@ -172,7 +179,9 @@ class NetworkService {
             let status = decodedData.status
             
             for name in imageNames {
-                storageService.addImage(subbreedName: subbreedName, with: name)
+                DispatchQueue.main.async {
+                    self.storageService.addImage(subbreedName: subbreedName, with: name)
+                }
             }
             
             return status
