@@ -41,26 +41,26 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
     func setupCollectionView() {
         if let breed = breed {
             navItem.title = breed.name?.capitalized
-            guard let breedName = breed.name, let images = storageService.loadImages(breedName: breedName) else { return }
+            guard let breedName = breed.name, let images = storageService.loadBreedImages(breedName: breedName) else { return }
             self.images = images
             
             if images.isEmpty {
                 showSpinnerView(spinner)
                 networkService.fetchImages(by: breedName)
-                guard let images = storageService.loadImages(breedName: breedName) else { return }
+                guard let images = storageService.loadBreedImages(breedName: breedName) else { return }
                 self.images = images
             } else {
                 updateCollectionView(breedName: breedName)
             }
         } else {
             navItem.title = subbreed?.name?.capitalized
-            guard let subbreedName = subbreed?.name, let breedName = subbreed?.breed?.name, let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+            guard let subbreedName = subbreed?.name, let breedName = subbreed?.breed?.name, let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
             self.images = images
             
             if images.isEmpty {
                 showSpinnerView(spinner)
                 networkService.fetchImages(by: breedName, by: subbreedName)
-                guard let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+                guard let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
                 self.images = images
                 
             } else {
@@ -73,17 +73,23 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
     //MARK: - Delegate Methods
     
     func updateCollectionView(breedName: String) {
-        guard let images = storageService.loadImages(breedName: breedName) else { return }
+        guard let images = storageService.loadBreedImages(breedName: breedName) else { return }
         self.images = images
         imageCollectionView.reloadData()
         hideSpinnerView(spinner)
     }
     
     func updateCollectionView(subbreedName: String) {
-        guard let images = storageService.loadImages(subbreedName: subbreedName) else { return }
+        guard let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
         self.images = images
         imageCollectionView.reloadData()
         hideSpinnerView(spinner)
+    }
+    
+    func showErrorAlert(with message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+        present(alert, animated: true)
     }
     
     //MARK: - Spinner Methods

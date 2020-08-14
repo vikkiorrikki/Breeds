@@ -1,5 +1,5 @@
 //
-//  ImageNetworkDelegate.swift
+//  SubbreedNetworkDelegate.swift
 //  Breeds
 //
 //  Created by Виктория Саклакова on 14.08.2020.
@@ -8,8 +8,6 @@
 
 import Foundation
 
-protocol ImageNetworkDelegate: class {
-    func updateCollectionView(breedName: String)
-    func updateCollectionView(subbreedName: String)
+protocol SubbreedNetworkDelegate: class {
     func showErrorAlert(with message: String)
 }

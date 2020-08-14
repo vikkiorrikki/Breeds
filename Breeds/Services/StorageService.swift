@@ -12,7 +12,7 @@ import CoreData
 class StorageService {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    func addBreed(name: String) -> Bool {
+    func addBreed(name: String) {
         let breed = Breed(context: context)
         
         breed.id = UUID()
@@ -20,14 +20,12 @@ class StorageService {
 
         do {
             try context.save()
-            return true
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-            return false
         }
     }
     
-    func addSubbreed(with name: String, by breedName: String) -> Bool {
+    func addSubbreed(with name: String, by breedName: String) {
         let subbreed = Subbreed(context: context)
         
         subbreed.id = UUID()
@@ -39,14 +37,12 @@ class StorageService {
 
         do {
             try context.save()
-            return true
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-            return false
         }
     }
     
-    func addImage(breedName: String, with imageName: String) -> Bool {
+    func addBreedImage(breedName: String, with imageName: String) {
         let dogId = loadBreed(by: breedName)?.id
         let image = Image(context: context)
         
@@ -57,14 +53,12 @@ class StorageService {
 
         do {
             try context.save()
-            return true
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-            return false
         }
     }
     
-    func addImage(subbreedName: String, with imageName: String) -> Bool {
+    func addSubbreedImage(subbreedName: String, with imageName: String) {
         let dogId = loadSubbreed(by: subbreedName)?.id
         let image = Image(context: context)
         
@@ -75,10 +69,8 @@ class StorageService {
 
         do {
             try context.save()
-            return true
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-            return false
         }
     }
     
@@ -134,7 +126,7 @@ class StorageService {
         }
     }
     
-    func loadImages(breedName: String) -> [Image]? {
+    func loadBreedImages(breedName: String) -> [Image]? {
         let dogId = loadBreed(by: breedName)?.id
         let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "dogId == %@", dogId! as CVarArg)
@@ -147,7 +139,7 @@ class StorageService {
         }
     }
     
-    func loadImages(subbreedName: String) -> [Image]? {
+    func loadSubbreedImages(subbreedName: String) -> [Image]? {
         let dogId = loadSubbreed(by: subbreedName)?.id
         let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "dogId == %@", dogId! as CVarArg)
@@ -160,26 +152,21 @@ class StorageService {
         }
     }
     
-    func updateImage(for imageId: UUID, with favourite: Bool) -> Bool {
+    func updateImage(for imageId: UUID, with favourite: Bool) {
         let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "id == %@", imageId as CVarArg)
         
         do {
-            guard let image = try context.fetch(fetchRequest).first else {
-                return false
-            }
+            guard let image = try context.fetch(fetchRequest).first else { return }
             image.favourite = favourite
         } catch let error as NSError {
             print(error.localizedDescription)
-            return false
         }
         
         do {
             try context.save()
-            return true
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
-            return false
         }
     }
 }

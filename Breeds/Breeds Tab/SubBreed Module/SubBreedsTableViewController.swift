@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SubBreedsTableViewController: UITableViewController {
+class SubBreedsTableViewController: UITableViewController, SubbreedNetworkDelegate {
     
     //MARK: - IBOutlets
     
@@ -19,22 +19,25 @@ class SubBreedsTableViewController: UITableViewController {
     let storageService = StorageService()
     var breed: Breed?
     var subbreeds = [Subbreed]()
+    let networkService = NetworkService()
     
     //MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView()
+        networkService.delegateSubbreeds = self
+
         navItem?.title = breed?.name?.capitalized
         guard let breedName = breed?.name, let subbreeds = storageService.loadSubbreeds(by: breedName) else { return }
         self.subbreeds = subbreeds
-
+        
+        tableView.tableFooterView = UIView()
     }
     
-    //MARK: - Methods
+    //MARK: - Delegate Methods
     
-    func showErrorAlert() {
-        let alert = UIAlertController(title: "Error", message: "Error of loading files", preferredStyle: .alert)
+    func showErrorAlert(with message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
     }

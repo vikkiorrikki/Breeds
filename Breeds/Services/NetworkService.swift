@@ -11,6 +11,7 @@ import Foundation
 class NetworkService {
     
     weak var delegateBreeds: BreedNetworkDelegate?
+    weak var delegateSubbreeds: SubbreedNetworkDelegate?
     weak var delegateImages: ImageNetworkDelegate?
     
     let storageService = StorageService()
@@ -66,7 +67,7 @@ class NetworkService {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    //                    self.delegate?.didFailWithError(error: error!)
+                    self.delegateSubbreeds?.showErrorAlert(with: "\(String(describing: error))")
                 }
                 if let safeData = data {
                     
@@ -98,6 +99,7 @@ class NetworkService {
             
             return status
         } catch {
+            self.delegateSubbreeds?.showErrorAlert(with: "\(error)")
             return "\(error)"
         }
     }
@@ -111,7 +113,7 @@ class NetworkService {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    //                    self.delegate?.didFailWithError(error: error!)
+                    self.delegateImages?.showErrorAlert(with: "\(String(describing: error))")
                 }
                 if let safeData = data {
                     
@@ -136,12 +138,13 @@ class NetworkService {
             
             for name in imageNames {
                 DispatchQueue.main.async {
-                    self.storageService.addImage(breedName: breedName, with: name)
+                    self.storageService.addBreedImage(breedName: breedName, with: name)
                 }
             }
             
             return status
         } catch {
+            self.delegateImages?.showErrorAlert(with: "\(error)")
             return "\(error)"
         }
     }
@@ -155,7 +158,7 @@ class NetworkService {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
                 if error != nil {
-                    //                    self.delegate?.didFailWithError(error: error!)
+                    self.delegateImages?.showErrorAlert(with: "\(String(describing: error))")
                 }
                 if let safeData = data {
                     
@@ -180,12 +183,13 @@ class NetworkService {
             
             for name in imageNames {
                 DispatchQueue.main.async {
-                    self.storageService.addImage(subbreedName: subbreedName, with: name)
+                    self.storageService.addSubbreedImage(subbreedName: subbreedName, with: name)
                 }
             }
             
             return status
         } catch {
+            self.delegateImages?.showErrorAlert(with: "\(error)")
             return "\(error)"
         }
     }
