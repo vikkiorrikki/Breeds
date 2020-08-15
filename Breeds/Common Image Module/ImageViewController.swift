@@ -41,7 +41,13 @@ class ImageViewController: UIViewController {
             setupUIBreeds(breed)
         } else if let subbreed = subbreed {
             setupUISubbreeds(subbreed)
+        } else if !images.isEmpty {
+            imageCollectionView.reloadData()
         }
+    }
+    
+    func showFavouritesImages(with images: [Image]) {
+        self.images = images
     }
     
     private func setupUIBreeds(_ breed: Breed) {
@@ -165,13 +171,6 @@ extension ImageViewController: ImageCellDelegate {
         guard let imageId = image.id else { return }
         storageService.updateImage(for: imageId, with: favourite)
         imageCollectionView.reloadData()
-        
-//        let controller = FavouritesTableViewController()
-//        if favourite {
-//            controller.addFavourite(dogsName: dogName(image: image), with: image)
-//        } else {
-//            controller.removeFavourite(dogsName: dogName(image: image), with: image)
-//        }
     }
     
     func showSharedMenu(for image: UIImage) {
