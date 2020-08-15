@@ -10,8 +10,6 @@ import Foundation
 
 class NetworkService {
     
-    weak var delegateBreeds: BreedNetworkDelegate?
-    weak var delegateSubbreeds: SubbreedNetworkDelegate?
     weak var delegateImages: ImageNetworkDelegate?
     
     let storageService = StorageService()
@@ -19,63 +17,19 @@ class NetworkService {
     
     //MARK: - Fetch Breeds
     
-    func fetchBreeds() {
+    func fetchBreeds(resultHandler: @escaping (Result<[String], Error>)->()) {
         let urlString = "\(requestURL)/breeds/list"
         
         if let url = URL(string: urlString){
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegateBreeds?.showErrorAlert(with: "\(String(describing: error))")
-                }
-                if let safeData = data {
-                    self.parseJSON(breedData: safeData)
-                }
-            }
-            task.resume()
-        }
-    }
-    
-    func parseJSON(breedData: Data) -> String {
-        let decoder = JSONDecoder()
-        
-        do {
-            let decodedData = try decoder.decode(BreedData.self, from: breedData)
-            let breedNames = decodedData.message
-            let status = decodedData.status
-            
-            for name in breedNames {
-                DispatchQueue.main.async {
-                    self.storageService.addBreed(name: name)
-                }
-                fetchSubbreeds(by: name)
-            }
-            
-            return status
-        } catch {
-            delegateBreeds?.showErrorAlert(with: "\(error)")
-            return "\(error)"
-        }
-    }
-    
-    //MARK: - Fetch Subbreeds
-    
-    func fetchSubbreeds(by breed: String) {
-        let urlString = "\(requestURL)/breed/\(breed)/list"
-        
-        if let url = URL(string: urlString){
-            let session = URLSession(configuration: .default)
-            let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegateSubbreeds?.showErrorAlert(with: "\(String(describing: error))")
-                }
-                if let safeData = data {
-                    
-                    if self.parseJSON(subbreedData: safeData, by: breed) == "success" {
-                        DispatchQueue.main.async {
-                            self.delegateBreeds?.update()
-                        }
-                        
+                if let error = error {
+                    DispatchQueue.main.async {
+                        resultHandler(.failure(error))
+                    }
+                } else if let data = data, let breeds = self.parseBreeds(from: data) {
+                    DispatchQueue.main.async {
+                        resultHandler(.success(breeds))
                     }
                 }
             }
@@ -83,24 +37,43 @@ class NetworkService {
         }
     }
     
-    func parseJSON(subbreedData: Data, by breedName: String) -> String {
-        let decoder = JSONDecoder()
-        
+    func parseBreeds(from data: Data) -> [String]? {
         do {
-            let decodedData = try decoder.decode(SubbreedData.self, from: subbreedData)
-            let subbreedNames = decodedData.message
-            let status = decodedData.status
-            
-            for name in subbreedNames {
-                DispatchQueue.main.async {
-                    self.storageService.addSubbreed(with: name, by: breedName)
+            let decodedData = try JSONDecoder().decode(BreedData.self, from: data)
+            return decodedData.message
+        } catch {
+            return nil
+        }
+    }
+    
+    //MARK: - Fetch Subbreeds
+    
+    func fetchSubbreeds(for breed: String, resultHandler: @escaping (Result<[String], Error>)->()) {
+        let urlString = "\(requestURL)/breed/\(breed)/list"
+        
+        if let url = URL(string: urlString){
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { (data, response, error) in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        resultHandler(.failure(error))
+                    }
+                } else if let data = data, let subbreeds = self.parseSubbreeds(from: data) {
+                    DispatchQueue.main.async {
+                        resultHandler(.success(subbreeds))
+                    }
                 }
             }
-            
-            return status
+            task.resume()
+        }
+    }
+    
+    func parseSubbreeds(from data: Data) -> [String]? {
+        do {
+            let decodedData = try JSONDecoder().decode(SubbreedData.self, from: data)
+            return decodedData.message
         } catch {
-            self.delegateSubbreeds?.showErrorAlert(with: "\(error)")
-            return "\(error)"
+            return nil
         }
     }
     

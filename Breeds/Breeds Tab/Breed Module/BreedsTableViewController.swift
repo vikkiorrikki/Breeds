@@ -8,7 +8,7 @@
 
 import UIKit
 
-class BreedsTableViewController: UITableViewController, BreedNetworkDelegate {
+class BreedsTableViewController: UITableViewController {
 
     var breeds = [Breed]()
     let storageService = StorageService()
@@ -16,36 +16,81 @@ class BreedsTableViewController: UITableViewController, BreedNetworkDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupUI()
+        loadBreeds()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        networkService.delegateBreeds = self
-        
-        guard let breeds = storageService.loadBreeds() else { return }
-        
-        if breeds.isEmpty {
-            networkService.fetchBreeds()
-        } else {
-            update()
-        }
-
-        tableView.tableFooterView = UIView()
     }
     
     //MARK: - Methods
     
-    func update() {
+    private func setupUI() {
+        tableView.tableFooterView = UIView()
+    }
+    
+    private func loadBreeds() {
+        let spinner = SpinnerViewController()
+        
+        if storageService.isBreeds() {
+            showSpinnerView(spinner)
+        }
+        
+        networkService.fetchBreeds() { result in
+            switch result {
+            case .success(let breeds):
+                self.storageService.addBreeds(breeds)
+                
+                for breed in breeds {
+                    self.loadSubbreeds(for: breed)
+                }
+                self.update()
+                self.hideSpinnerView(spinner)
+            case .failure(let error):
+                self.showErrorAlert(error)
+            }
+        }
+    }
+    
+    private func loadSubbreeds(for breed: String) {
+        self.networkService.fetchSubbreeds(for: breed) { result in
+            switch result {
+            case .success(let subbreeds):
+                self.storageService.addSubbreeds(subbreeds, for: breed)
+            case .failure(let error):
+                self.showErrorAlert(error)
+            }
+        }
+    }
+    
+    private func update() {
         guard let breeds = storageService.loadBreeds() else { return }
         self.breeds = breeds
-        reloadTable()
+        tableView.reloadData()
     }
     
-    func reloadTable() {
-        self.tableView.reloadData()
-    }
-    
-    func showErrorAlert(with message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+    private func showErrorAlert(_ error: Error) {
+        let alert = UIAlertController(
+            title: "Error",
+            message: error.localizedDescription,
+            preferredStyle: .alert
+        )
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
+    }
+    
+    //MARK: - Spinner Methods
+    
+    private func showSpinnerView(_ spinner: SpinnerViewController) {
+        addChild(spinner)
+        spinner.view.frame = view.frame
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+    }
+    
+    private func hideSpinnerView(_ spinner: SpinnerViewController) {
+        spinner.willMove(toParent: nil)
+        spinner.view.removeFromSuperview()
+        spinner.removeFromParent()
     }
 
     // MARK: - Table view data source

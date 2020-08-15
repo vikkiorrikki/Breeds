@@ -12,11 +12,24 @@ import CoreData
 class StorageService {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
-    func addBreed(name: String) {
-        let breed = Breed(context: context)
+    func addBreeds(_ breeds: [String]) {
+        var existingBreedsNames = [String]()
         
-        breed.id = UUID()
-        breed.name = name
+        if let existingBreeds = loadBreeds() {
+            for breed in existingBreeds {
+                if let breedName = breed.name {
+                    existingBreedsNames.append(breedName)
+                }
+            }
+        }
+
+        for breedName in breeds {
+            if !existingBreedsNames.contains(breedName) {
+                let breed = Breed(context: context)
+                breed.id = UUID()
+                breed.name = breedName
+            }
+        }
 
         do {
             try context.save()
@@ -25,15 +38,28 @@ class StorageService {
         }
     }
     
-    func addSubbreed(with name: String, by breedName: String) {
-        let subbreed = Subbreed(context: context)
+    func addSubbreeds(_ subbreeds: [String], for breedName: String) {
+        var existingSubbreedsNames = [String]()
         
-        subbreed.id = UUID()
-        subbreed.name = name
+        if let existingSubbreeds = loadSubbreeds(by: breedName) {
+            for subbbreed in existingSubbreeds {
+                if let subbbreedName = subbbreed.name {
+                    existingSubbreedsNames.append(subbbreedName)
+                }
+            }
+        }
         
         let breed = loadBreed(by: breedName)
-        subbreed.breedId = breed?.id
-        subbreed.breed = breed
+        for subbreedsName in subbreeds {
+            if !existingSubbreedsNames.contains(subbreedsName) {
+                let subbreed = Subbreed(context: context)
+                subbreed.id = UUID()
+                subbreed.name = subbreedsName
+                
+                subbreed.breedId = breed?.id
+                subbreed.breed = breed
+            }
+        }
 
         do {
             try context.save()
@@ -43,7 +69,6 @@ class StorageService {
     }
     
     func addBreedImage(breedName: String, with imageName: String) {
-//        let dogId = loadBreed(by: breedName)?.id
         let image = Image(context: context)
         
         image.id = UUID()
@@ -76,6 +101,22 @@ class StorageService {
             try context.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
+        }
+    }
+    
+    func isBreeds() -> Bool {
+        if loadBreeds() != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isSubbreeds(for breed: String) -> Bool {
+        if loadSubbreeds(by: breed) != nil {
+            return true
+        } else {
+            return false
         }
     }
     

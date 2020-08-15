@@ -26,9 +26,7 @@
 		F52B05E124E5D1D1000D9F83 /* SubbreedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F52B05E024E5D1D1000D9F83 /* SubbreedData.swift */; };
 		F544075624E2C78700DC70B5 /* ImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075524E2C78700DC70B5 /* ImageViewController.swift */; };
 		F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */; };
-		F59FE92024E70D7D007AE153 /* BreedNetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59FE91F24E70D7D007AE153 /* BreedNetworkDelegate.swift */; };
 		F59FE92224E70E3B007AE153 /* ImageNetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59FE92124E70E3B007AE153 /* ImageNetworkDelegate.swift */; };
-		F59FE92424E70F7C007AE153 /* SubbreedNetworkDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F59FE92324E70F7C007AE153 /* SubbreedNetworkDelegate.swift */; };
 		F5C8451124E4A6C1001091CE /* ImageCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C8451024E4A6C1001091CE /* ImageCellDelegate.swift */; };
 		F5C8451524E4A8A4001091CE /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5C8451424E4A8A4001091CE /* SpinnerViewController.swift */; };
 /* End PBXBuildFile section */
@@ -57,9 +55,7 @@
 		F52B05E024E5D1D1000D9F83 /* SubbreedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubbreedData.swift; sourceTree = "<group>"; };
 		F544075524E2C78700DC70B5 /* ImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewController.swift; sourceTree = "<group>"; };
 		F544075824E2D33300DC70B5 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
-		F59FE91F24E70D7D007AE153 /* BreedNetworkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreedNetworkDelegate.swift; sourceTree = "<group>"; };
 		F59FE92124E70E3B007AE153 /* ImageNetworkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageNetworkDelegate.swift; sourceTree = "<group>"; };
-		F59FE92324E70F7C007AE153 /* SubbreedNetworkDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubbreedNetworkDelegate.swift; sourceTree = "<group>"; };
 		F5C8451024E4A6C1001091CE /* ImageCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellDelegate.swift; sourceTree = "<group>"; };
 		F5C8451424E4A8A4001091CE /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -177,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				F527F9DC24E1F74400C64D94 /* BreedsTableViewController.swift */,
-				F59FE91F24E70D7D007AE153 /* BreedNetworkDelegate.swift */,
 				F527F9F124E1FC6700C64D94 /* Cell */,
 			);
 			path = "Breed Module";
@@ -187,7 +182,6 @@
 			isa = PBXGroup;
 			children = (
 				F527F9E224E1F7A300C64D94 /* SubBreedsTableViewController.swift */,
-				F59FE92324E70F7C007AE153 /* SubbreedNetworkDelegate.swift */,
 			);
 			path = "SubBreed Module";
 			sourceTree = "<group>";
@@ -345,11 +339,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F59FE92024E70D7D007AE153 /* BreedNetworkDelegate.swift in Sources */,
 				F527F9CF24E1F36C00C64D94 /* Breeds.xcdatamodeld in Sources */,
 				F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */,
 				F516177724E7F802007B3A03 /* FavouriteTableViewCell.swift in Sources */,
-				F59FE92424E70F7C007AE153 /* SubbreedNetworkDelegate.swift in Sources */,
 				F527F9E324E1F7A300C64D94 /* SubBreedsTableViewController.swift in Sources */,
 				F52B05E124E5D1D1000D9F83 /* SubbreedData.swift in Sources */,
 				F5C8451524E4A8A4001091CE /* SpinnerViewController.swift in Sources */,

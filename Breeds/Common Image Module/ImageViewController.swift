@@ -69,15 +69,6 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
         }
     }
     
-    func dogName(image: Image) -> String {
-        if let dogName = image.subbreed?.name {
-            return dogName
-        } else if let dogName = image.breed?.name {
-            return dogName
-        }
-        return ""
-    }
-    
     //MARK: - Delegate Methods
     
     func updateCollectionView(breedName: String) {

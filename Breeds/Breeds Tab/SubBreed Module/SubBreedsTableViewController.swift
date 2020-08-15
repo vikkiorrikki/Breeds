@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SubBreedsTableViewController: UITableViewController, SubbreedNetworkDelegate {
+class SubBreedsTableViewController: UITableViewController {
     
     //MARK: - IBOutlets
     
@@ -16,30 +16,71 @@ class SubBreedsTableViewController: UITableViewController, SubbreedNetworkDelega
     
     //MARK: - Properties
     
+    let networkService = NetworkService()
     let storageService = StorageService()
     var breed: Breed?
     var subbreeds = [Subbreed]()
-    let networkService = NetworkService()
     
     //MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        networkService.delegateSubbreeds = self
-
+        setupUI()
+        loadSubbreeds()
+    }
+    
+    //MARK: - Methods
+    
+    private func setupUI() {
         navItem?.title = breed?.name?.capitalized
-        guard let breedName = breed?.name, let subbreeds = storageService.loadSubbreeds(by: breedName) else { return }
-        self.subbreeds = subbreeds
-        
         tableView.tableFooterView = UIView()
     }
     
-    //MARK: - Delegate Methods
+    private func loadSubbreeds() {
+        let spinner = SpinnerViewController()
+        guard let breedName = breed?.name else { return }
+        
+        if storageService.isSubbreeds(for: breedName) {
+            showSpinnerView(spinner)
+        }
+        
+        networkService.fetchSubbreeds(for: breedName) { (result) in
+            switch result {
+            case .failure(let error):
+                self.showErrorAlert(with: error)
+            case .success(let subbreeds):
+                self.storageService.addSubbreeds(subbreeds, for: breedName)
+                self.update()
+                self.hideSpinnerView(spinner)
+            }
+        }
+    }
     
-    func showErrorAlert(with message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+    private func update() {
+        guard let breedName = breed?.name, let subbreeds = storageService.loadSubbreeds(by: breedName) else { return }
+        self.subbreeds = subbreeds
+        tableView.reloadData()
+    }
+    
+    private func showErrorAlert(with error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
+    }
+    
+    //MARK: - Spinner Methods
+    
+    private func showSpinnerView(_ spinner: SpinnerViewController) {
+        addChild(spinner)
+        spinner.view.frame = view.frame
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+    }
+    
+    private func hideSpinnerView(_ spinner: SpinnerViewController) {
+        spinner.willMove(toParent: nil)
+        spinner.view.removeFromSuperview()
+        spinner.removeFromParent()
     }
 
     // MARK: - Table view data source
