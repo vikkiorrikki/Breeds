@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImageViewController: UIViewController, ImageNetworkDelegate {
+class ImageViewController: UIViewController {    
     
     //MARK: - IBOutlets
     
@@ -30,77 +30,90 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
         super.viewDidLoad()
         imageCollectionView.delegate = self
         imageCollectionView.dataSource = self
-        networkService.delegateImages = self
         
         setupCollectionView()
     }
     
-    //MARK: - Methods
+    //MARK: - Setup UI
     
-    func setupCollectionView() {
+    private func setupCollectionView() {
         if let breed = breed {
-            navItem.title = breed.name?.capitalized
-            guard let breedName = breed.name, let images = storageService.loadBreedImages(breedName: breedName) else { return }
-            self.images = images
-            
-            if images.isEmpty {
-                showSpinnerView(spinner)
-                networkService.fetchImages(by: breedName)
-                guard let images = storageService.loadBreedImages(breedName: breedName) else { return }
-                self.images = images
-            } else {
-                updateCollectionView(breedName: breedName)
+            setupUIBreeds(breed)
+        } else if let subbreed = subbreed {
+            setupUISubbreeds(subbreed)
+        }
+    }
+    
+    private func setupUIBreeds(_ breed: Breed) {
+        guard let breedName = breed.name else { return }
+        navItem.title = breedName.capitalized
+        
+        if storageService.isImagesBreeds(breedName) {
+            showSpinnerView(spinner)
+        }
+        
+        networkService.fetchImages(by: breedName) { result in
+            switch result {
+            case .failure(let error):
+                self.showErrorAlert(with: error)
+            case .success(let images):
+                self.storageService.addBreedImages(images, for: breedName)
+                self.updateCollectionView(breedName: breedName)
             }
-        } else {
-            navItem.title = subbreed?.name?.capitalized
-            guard let subbreedName = subbreed?.name, let breedName = subbreed?.breed?.name, let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
-            self.images = images
-            
-            if images.isEmpty {
-                showSpinnerView(spinner)
-                networkService.fetchImages(by: breedName, by: subbreedName)
-                guard let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
-                self.images = images
-                
-            } else {
-                updateCollectionView(subbreedName: subbreedName)
-                
+        }
+    }
+
+    private func setupUISubbreeds(_ subbreed: Subbreed) {
+        guard let subbreedName = subbreed.name, let breedName = subbreed.breed?.name else { return }
+        navItem.title = subbreed.name?.capitalized
+        
+        if storageService.isImagesSubbreeds(subbreedName) {
+            showSpinnerView(spinner)
+        }
+        
+        networkService.fetchImages(subbreedName, for: breedName) { result in
+            switch result {
+            case .failure(let error):
+                self.showErrorAlert(with: error)
+            case.success(let images):
+                self.storageService.addSubbreedImages(images, for: subbreedName)
+                self.updateCollectionView(subbreedName: subbreedName)
             }
         }
     }
     
     //MARK: - Delegate Methods
     
-    func updateCollectionView(breedName: String) {
+    private func updateCollectionView(breedName: String) {
         guard let images = storageService.loadBreedImages(breedName: breedName) else { return }
         self.images = images
         imageCollectionView.reloadData()
         hideSpinnerView(spinner)
     }
     
-    func updateCollectionView(subbreedName: String) {
+    private func updateCollectionView(subbreedName: String) {
         guard let images = storageService.loadSubbreedImages(subbreedName: subbreedName) else { return }
         self.images = images
         imageCollectionView.reloadData()
         hideSpinnerView(spinner)
     }
     
-    func showErrorAlert(with message: String) {
-        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+    private func showErrorAlert(with error: Error) {
+        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         present(alert, animated: true)
     }
     
     //MARK: - Spinner Methods
     
-    func showSpinnerView(_ spinner: SpinnerViewController) {
+    private func showSpinnerView(_ spinner: SpinnerViewController) {
         addChild(spinner)
         spinner.view.frame = view.frame
         view.addSubview(spinner.view)
         spinner.didMove(toParent: self)
     }
     
-    func hideSpinnerView(_ spinner: SpinnerViewController) {
+    private func hideSpinnerView(_ spinner: SpinnerViewController) {
         spinner.willMove(toParent: nil)
         spinner.view.removeFromSuperview()
         spinner.removeFromParent()

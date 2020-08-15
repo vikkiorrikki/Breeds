@@ -12,6 +12,8 @@ import CoreData
 class StorageService {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
+    //MARK: - Add Entities
+    
     func addBreeds(_ breeds: [String]) {
         var existingBreedsNames = [String]()
         
@@ -68,17 +70,29 @@ class StorageService {
         }
     }
     
-    func addBreedImage(breedName: String, with imageName: String) {
-        let image = Image(context: context)
+    func addBreedImages(_ images: [String], for breedName: String) {
+        var existingBreedsImagesNames = [String]()
         
-        image.id = UUID()
-        image.name = imageName
-        image.favourite = false
+        if let existingBreedsImages = loadBreedImages(breedName: breedName) {
+            for image in existingBreedsImages {
+                if let breedImageName = image.name {
+                    existingBreedsImagesNames.append(breedImageName)
+                }
+            }
+        }
         
         let breed = loadBreed(by: breedName)
-        image.dogId = breed?.id
-        image.breed = breed
-
+        for imageName in images {
+            if !existingBreedsImagesNames.contains(imageName) {
+                let image = Image(context: context)
+                image.id = UUID()
+                image.name = imageName
+                image.favourite = false
+                image.dogId = breed?.id
+                image.breed = breed
+            }
+        }
+        
         do {
             try context.save()
         } catch let error as NSError {
@@ -86,23 +100,37 @@ class StorageService {
         }
     }
     
-    func addSubbreedImage(subbreedName: String, with imageName: String) {
-        let image = Image(context: context)
+    func addSubbreedImages(_ images: [String], for subbreedName: String) {
+        var existingSubbreedsImagesNames = [String]()
         
-        image.id = UUID()
-        image.name = imageName
-        image.favourite = false
+        if let existingSubbreedsImages = loadSubbreedImages(subbreedName: subbreedName) {
+            for image in existingSubbreedsImages {
+                if let subbreedImageName = image.name {
+                    existingSubbreedsImagesNames.append(subbreedImageName)
+                }
+            }
+        }
         
         let subbreed = loadSubbreed(by: subbreedName)
-        image.dogId = subbreed?.id
-        image.subbreed = subbreed
-
+        for imageName in images {
+            if !existingSubbreedsImagesNames.contains(imageName) {
+                let image = Image(context: context)
+                image.id = UUID()
+                image.name = imageName
+                image.favourite = false
+                image.dogId = subbreed?.id
+                image.subbreed = subbreed
+            }
+        }
+        
         do {
             try context.save()
         } catch let error as NSError {
             print("Could not save. \(error), \(error.userInfo)")
         }
     }
+
+    //MARK: - Check Entities
     
     func isBreeds() -> Bool {
         if loadBreeds() != nil {
@@ -119,6 +147,24 @@ class StorageService {
             return false
         }
     }
+    
+    func isImagesBreeds(_ breed: String) -> Bool {
+        if loadBreedImages(breedName: breed) != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    func isImagesSubbreeds(_ subbreed: String) -> Bool {
+        if loadSubbreedImages(subbreedName: subbreed) != nil {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    //MARK: - Load Entities
     
     func loadBreeds() -> [Breed]? {
         let fetchRequest: NSFetchRequest<Breed> = Breed.fetchRequest()
@@ -216,6 +262,8 @@ class StorageService {
             return nil
         }
     }
+    
+    //MARK: - Update Image
     
     func updateImage(for imageId: UUID, with favourite: Bool) {
         let fetchRequest: NSFetchRequest<Image> = Image.fetchRequest()

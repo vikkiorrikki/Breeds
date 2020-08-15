@@ -9,10 +9,7 @@
 import Foundation
 
 class NetworkService {
-    
-    weak var delegateImages: ImageNetworkDelegate?
-    
-    let storageService = StorageService()
+
     let requestURL = "https://dog.ceo/api"
     
     //MARK: - Fetch Breeds
@@ -79,21 +76,20 @@ class NetworkService {
     
     //MARK: - Fetch Images for Breed
     
-    func fetchImages(by breed: String) {
+    func fetchImages(by breed: String, resultHandler: @escaping (Result<[String], Error>)->()) {
         let urlString = "\(requestURL)/breed/\(breed)/images"
         
         if let url = URL(string: urlString){
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegateImages?.showErrorAlert(with: "\(String(describing: error))")
+                if let error = error {
+                    DispatchQueue.main.async {
+                        resultHandler(.failure(error))
+                    }
                 }
-                if let safeData = data {
-                    
-                    if self.parseJSON(imageData: safeData, breedName: breed) == "success" {
-                        DispatchQueue.main.async {
-                            self.delegateImages?.updateCollectionView(breedName: breed)
-                        }
+                if let data = data, let imagesBreed = self.parseBreedsImages(from: data, for: breed) {
+                    DispatchQueue.main.async {
+                        resultHandler(.success(imagesBreed))
                     }
                 }
             }
@@ -101,44 +97,31 @@ class NetworkService {
         }
     }
     
-    func parseJSON(imageData: Data, breedName: String) -> String {
-        let decoder = JSONDecoder()
-        
+    func parseBreedsImages(from data: Data, for breedName: String) -> [String]? {
         do {
-            let decodedData = try decoder.decode(ImageData.self, from: imageData)
-            let imageNames = decodedData.message
-            let status = decodedData.status
-            
-            for name in imageNames {
-                DispatchQueue.main.async {
-                    self.storageService.addBreedImage(breedName: breedName, with: name)
-                }
-            }
-            
-            return status
+            let decodedData = try JSONDecoder().decode(ImageData.self, from: data)
+            return decodedData.message
         } catch {
-            self.delegateImages?.showErrorAlert(with: "\(error)")
-            return "\(error)"
+            return nil
         }
     }
     
     //MARK: - Fetch Images for Subbreed
     
-    func fetchImages(by breed: String, by subbreed: String) {
+    func fetchImages(_ subbreed: String, for breed: String, resultHandler: @escaping (Result<[String], Error>)->()) {
         let urlString = "\(requestURL)/breed/\(breed)/\(subbreed)/images"
         
         if let url = URL(string: urlString){
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { (data, response, error) in
-                if error != nil {
-                    self.delegateImages?.showErrorAlert(with: "\(String(describing: error))")
+                if let error = error {
+                    DispatchQueue.main.async {
+                        resultHandler(.failure(error))
+                    }
                 }
-                if let safeData = data {
-                    
-                    if self.parseJSON(imageData: safeData, subbreedName: subbreed) == "success" {
-                        DispatchQueue.main.async {
-                            self.delegateImages?.updateCollectionView(subbreedName: subbreed)
-                        }
+                if let data = data, let imagesSubbreed = self.parseSubbreedsImages(from: data, for: subbreed) {
+                    DispatchQueue.main.async {
+                        resultHandler(.success(imagesSubbreed))
                     }
                 }
             }
@@ -146,24 +129,12 @@ class NetworkService {
         }
     }
     
-    func parseJSON(imageData: Data, subbreedName: String) -> String {
-        let decoder = JSONDecoder()
-        
+    func parseSubbreedsImages(from data: Data, for subbreedName: String) -> [String]? {
         do {
-            let decodedData = try decoder.decode(ImageData.self, from: imageData)
-            let imageNames = decodedData.message
-            let status = decodedData.status
-            
-            for name in imageNames {
-                DispatchQueue.main.async {
-                    self.storageService.addSubbreedImage(subbreedName: subbreedName, with: name)
-                }
-            }
-            
-            return status
+            let decodedData = try JSONDecoder().decode(ImageData.self, from: data)
+            return decodedData.message
         } catch {
-            self.delegateImages?.showErrorAlert(with: "\(error)")
-            return "\(error)"
+            return nil
         }
     }
 }
