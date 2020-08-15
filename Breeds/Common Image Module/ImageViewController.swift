@@ -16,7 +16,6 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
     @IBOutlet weak var navItem: UINavigationItem!
     
     //MARK: - Properties
-    
     let storageService = StorageService()
     let networkService = NetworkService()
     
@@ -70,6 +69,15 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
         }
     }
     
+    func dogName(image: Image) -> String {
+        if let dogName = image.subbreed?.name {
+            return dogName
+        } else if let dogName = image.breed?.name {
+            return dogName
+        }
+        return ""
+    }
+    
     //MARK: - Delegate Methods
     
     func updateCollectionView(breedName: String) {
@@ -107,29 +115,6 @@ class ImageViewController: UIViewController, ImageNetworkDelegate {
         spinner.removeFromParent()
     }
     
-    //MARK: - IBActions
-    
-    @IBAction func sharedButtonTouched(_ sender: UIBarButtonItem) {
-        let optionMenu = UIAlertController(title: nil, message: "Share Photo", preferredStyle: .actionSheet)
-        
-        let shareAction = UIAlertAction(title: "Share", style: .default, handler: { [unowned self] (UIAlertAction) in
-            let sharedController = UIActivityViewController(activityItems: [self.images], applicationActivities: nil)
-            sharedController.completionWithItemsHandler = {_, bool, _, _ in
-                if bool {
-                    print("Success!")
-                }
-            }
-            self.present(sharedController, animated: true)
-        })
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
-        optionMenu.addAction(shareAction)
-        optionMenu.addAction(cancelAction)
-        
-        self.present(optionMenu, animated: true, completion: nil)
-    }
-    
 }
 
 //MARK: - UICollectionViewDelegate, UICollectionViewDataSourc
@@ -143,7 +128,6 @@ extension ImageViewController: UICollectionViewDelegate, UICollectionViewDataSou
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as! ImageCollectionViewCell
         cell.delegate = self
-        
         cell.updateCell(image: images[indexPath.item])
         
         return cell
@@ -177,5 +161,33 @@ extension ImageViewController: ImageCellDelegate {
         guard let imageId = image.id else { return }
         storageService.updateImage(for: imageId, with: favourite)
         imageCollectionView.reloadData()
+        
+//        let controller = FavouritesTableViewController()
+//        if favourite {
+//            controller.addFavourite(dogsName: dogName(image: image), with: image)
+//        } else {
+//            controller.removeFavourite(dogsName: dogName(image: image), with: image)
+//        }
+    }
+    
+    func showSharedMenu(for image: UIImage) {
+        let optionMenu = UIAlertController(title: nil, message: "Share Photo", preferredStyle: .actionSheet)
+        
+        let shareAction = UIAlertAction(title: "Share", style: .default, handler: { [unowned self] (UIAlertAction) in
+            let sharedController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+            sharedController.completionWithItemsHandler = {_, bool, _, _ in
+                if bool {
+                    print("Success!")
+                }
+            }
+            self.present(sharedController, animated: true)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        optionMenu.addAction(shareAction)
+        optionMenu.addAction(cancelAction)
+        
+        self.present(optionMenu, animated: true)
     }
 }

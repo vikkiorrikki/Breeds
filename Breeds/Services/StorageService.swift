@@ -43,13 +43,16 @@ class StorageService {
     }
     
     func addBreedImage(breedName: String, with imageName: String) {
-        let dogId = loadBreed(by: breedName)?.id
+//        let dogId = loadBreed(by: breedName)?.id
         let image = Image(context: context)
         
         image.id = UUID()
         image.name = imageName
-        image.dogId = dogId
         image.favourite = false
+        
+        let breed = loadBreed(by: breedName)
+        image.dogId = breed?.id
+        image.breed = breed
 
         do {
             try context.save()
@@ -59,13 +62,15 @@ class StorageService {
     }
     
     func addSubbreedImage(subbreedName: String, with imageName: String) {
-        let dogId = loadSubbreed(by: subbreedName)?.id
         let image = Image(context: context)
         
         image.id = UUID()
         image.name = imageName
-        image.dogId = dogId
         image.favourite = false
+        
+        let subbreed = loadSubbreed(by: subbreedName)
+        image.dogId = subbreed?.id
+        image.subbreed = subbreed
 
         do {
             try context.save()
@@ -98,6 +103,25 @@ class StorageService {
             return nil
         }
     }
+    
+//    func loadImagesBreed(by name: String) -> [Image]? {
+//        let fetchRequest: NSFetchRequest<Breed> = Breed.fetchRequest()
+//        fetchRequest.predicate = NSPredicate(format: "name == %@", name)
+//        
+//        do {
+//            guard let breed = try context.fetch(fetchRequest).first
+//                else { return nil }
+//            
+//            let request2: NSFetchRequest<Image> = Image.fetchRequest()
+//            request2.predicate = NSPredicate(format: "%K = %@", argumentArray: [#keyPath(Image.breed.name), breed.name!])
+//            
+//            let images = try context.fetch(request2)
+//            return images
+//        } catch let error as NSError {
+//            print(error.localizedDescription)
+//            return nil
+//        }
+//    }
     
     func loadSubbreeds(by breedName: String) -> [Subbreed]? {
         let breedId = loadBreed(by: breedName)?.id

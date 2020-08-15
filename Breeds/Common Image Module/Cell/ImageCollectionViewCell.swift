@@ -11,6 +11,7 @@ import SDWebImage
 
 class ImageCollectionViewCell: UICollectionViewCell {
     
+    @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var favouritesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     
@@ -33,7 +34,7 @@ class ImageCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @IBAction func touchUpInside(_ sender: Any) {
+    @IBAction func favouriteButtonTouched(_ sender: Any) {
         if favourite {
             favouritesButton.setImage(UIImage(systemName: "heart"), for: .normal)
             favourite = false
@@ -44,6 +45,14 @@ class ImageCollectionViewCell: UICollectionViewCell {
         
         guard let image = image else { return }
         delegate?.userDidChangeFavourite(for: image, with: favourite)
+        print("favourites")
+    }
+    
+
+    @IBAction func shareButtonTouched(_ sender: UIButton) {
+        guard let imageName = image?.name, let image = UIImage(named: imageName) else { return }
+        delegate?.showSharedMenu(for: image)
+        print("SHARED")
     }
     
 }

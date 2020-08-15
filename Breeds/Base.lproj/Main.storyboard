@@ -140,21 +140,31 @@
                                                     <rect key="frame" x="0.0" y="353" width="357" height="50"/>
                                                     <subviews>
                                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N6Y-vK-P2d">
-                                                            <rect key="frame" x="311.5" y="5" width="25.5" height="40"/>
+                                                            <rect key="frame" x="215.5" y="5" width="25.5" height="40"/>
                                                             <color key="tintColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <state key="normal" image="heart" catalog="system"/>
                                                             <connections>
-                                                                <action selector="touchUpInside:" destination="ahQ-Yx-i39" eventType="touchUpInside" id="RhX-jD-5Gy"/>
+                                                                <action selector="favouriteButtonTouched:" destination="ahQ-Yx-i39" eventType="touchUpInside" id="RhX-jD-5Gy"/>
+                                                            </connections>
+                                                        </button>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r23-4o-3pn">
+                                                            <rect key="frame" x="291" y="5" width="46" height="40"/>
+                                                            <state key="normal" title="Button"/>
+                                                            <connections>
+                                                                <action selector="shareButtonTouched:" destination="ahQ-Yx-i39" eventType="touchUpInside" id="GJi-Rv-mYu"/>
                                                             </connections>
                                                         </button>
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                                     <constraints>
+                                                        <constraint firstItem="N6Y-vK-P2d" firstAttribute="leading" relation="lessThanOrEqual" secondItem="Jje-xJ-QbR" secondAttribute="leading" constant="400" id="08c-av-MpP"/>
+                                                        <constraint firstItem="r23-4o-3pn" firstAttribute="leading" secondItem="N6Y-vK-P2d" secondAttribute="trailing" constant="50" id="5LD-jP-yBJ"/>
                                                         <constraint firstAttribute="height" constant="50" id="6QW-iy-A2O"/>
-                                                        <constraint firstItem="N6Y-vK-P2d" firstAttribute="leading" relation="lessThanOrEqual" secondItem="Jje-xJ-QbR" secondAttribute="leading" constant="400" id="Ljv-KD-UuQ"/>
-                                                        <constraint firstAttribute="bottom" secondItem="N6Y-vK-P2d" secondAttribute="bottom" constant="5" id="Xpg-BI-v39"/>
-                                                        <constraint firstAttribute="trailing" secondItem="N6Y-vK-P2d" secondAttribute="trailing" constant="20" id="aIf-IX-9wD"/>
-                                                        <constraint firstItem="N6Y-vK-P2d" firstAttribute="top" secondItem="Jje-xJ-QbR" secondAttribute="top" constant="5" id="gUF-Ap-hbv"/>
+                                                        <constraint firstItem="N6Y-vK-P2d" firstAttribute="top" secondItem="Jje-xJ-QbR" secondAttribute="top" constant="5" id="FJO-nG-QQ1"/>
+                                                        <constraint firstAttribute="bottom" secondItem="r23-4o-3pn" secondAttribute="bottom" constant="5" id="TVW-JB-b8R"/>
+                                                        <constraint firstAttribute="bottom" secondItem="N6Y-vK-P2d" secondAttribute="bottom" constant="5" id="doo-o5-kTi"/>
+                                                        <constraint firstAttribute="trailing" secondItem="r23-4o-3pn" secondAttribute="trailing" constant="20" id="f0A-5l-h70"/>
+                                                        <constraint firstItem="r23-4o-3pn" firstAttribute="top" secondItem="Jje-xJ-QbR" secondAttribute="top" constant="5" id="xCe-9Y-W19"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>
@@ -173,6 +183,7 @@
                                         <connections>
                                             <outlet property="favouritesButton" destination="N6Y-vK-P2d" id="dgV-K0-WIH"/>
                                             <outlet property="imageView" destination="Cnq-he-YlP" id="vIh-gB-57W"/>
+                                            <outlet property="shareButton" destination="r23-4o-3pn" id="l4T-af-nDi"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -187,13 +198,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="vGz-Nm-VHY"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="zTq-yn-taG">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="VT7-Qg-9Nh">
-                            <connections>
-                                <action selector="sharedButtonTouched:" destination="YIg-mU-kOv" id="fk0-gL-Dgb"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Title" id="zTq-yn-taG"/>
                     <connections>
                         <outlet property="imageCollectionView" destination="tZ9-fo-0jd" id="kl1-EG-pvD"/>
                         <outlet property="navItem" destination="zTq-yn-taG" id="VCL-nu-N3h"/>
@@ -224,17 +229,17 @@
         <!--Favourites-->
         <scene sceneID="n3J-BS-iPo">
             <objects>
-                <tableViewController id="c2b-cr-AQ4" customClass="FavouritesTableViewController" customModule="Breeds" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="FavouriteVC" id="c2b-cr-AQ4" customClass="FavouritesTableViewController" customModule="Breeds" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="cl0-43-smy">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="JdZ-hT-6fB">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="FavouriteCell" id="JdZ-hT-6fB" customClass="FavouriteTableViewCell" customModule="Breeds" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JdZ-hT-6fB" id="zLA-YW-LQh">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>

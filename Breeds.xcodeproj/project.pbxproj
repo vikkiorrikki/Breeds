@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5BCCA99525801668E68CBD7C /* Pods_Breeds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE0C3E2B01D183A6A6C53EFB /* Pods_Breeds.framework */; };
+		F516177724E7F802007B3A03 /* FavouriteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F516177624E7F802007B3A03 /* FavouriteTableViewCell.swift */; };
 		F527F9C524E1F36C00C64D94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9C424E1F36C00C64D94 /* AppDelegate.swift */; };
 		F527F9C724E1F36C00C64D94 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F527F9C624E1F36C00C64D94 /* SceneDelegate.swift */; };
 		F527F9CC24E1F36C00C64D94 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F527F9CA24E1F36C00C64D94 /* Main.storyboard */; };
@@ -36,6 +37,7 @@
 		411B0AB8A4C021D7B93CB540 /* Pods-Breeds.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Breeds.debug.xcconfig"; path = "Target Support Files/Pods-Breeds/Pods-Breeds.debug.xcconfig"; sourceTree = "<group>"; };
 		6119952E22A137B396F0F82A /* Pods-Breeds.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Breeds.release.xcconfig"; path = "Target Support Files/Pods-Breeds/Pods-Breeds.release.xcconfig"; sourceTree = "<group>"; };
 		AE0C3E2B01D183A6A6C53EFB /* Pods_Breeds.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Breeds.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F516177624E7F802007B3A03 /* FavouriteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavouriteTableViewCell.swift; sourceTree = "<group>"; };
 		F527F9C124E1F36C00C64D94 /* Breeds.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Breeds.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F527F9C424E1F36C00C64D94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F527F9C624E1F36C00C64D94 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +91,14 @@
 				6119952E22A137B396F0F82A /* Pods-Breeds.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F516177824E7F807007B3A03 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F516177624E7F802007B3A03 /* FavouriteTableViewCell.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		F527F9B824E1F36C00C64D94 = {
@@ -149,6 +159,7 @@
 			isa = PBXGroup;
 			children = (
 				F527F9DF24E1F75F00C64D94 /* FavouritesTableViewController.swift */,
+				F516177824E7F807007B3A03 /* Cell */,
 			);
 			path = "Favourites Tab";
 			sourceTree = "<group>";
@@ -337,6 +348,7 @@
 				F59FE92024E70D7D007AE153 /* BreedNetworkDelegate.swift in Sources */,
 				F527F9CF24E1F36C00C64D94 /* Breeds.xcdatamodeld in Sources */,
 				F544075924E2D33300DC70B5 /* ImageCollectionViewCell.swift in Sources */,
+				F516177724E7F802007B3A03 /* FavouriteTableViewCell.swift in Sources */,
 				F59FE92424E70F7C007AE153 /* SubbreedNetworkDelegate.swift in Sources */,
 				F527F9E324E1F7A300C64D94 /* SubBreedsTableViewController.swift in Sources */,
 				F52B05E124E5D1D1000D9F83 /* SubbreedData.swift in Sources */,
